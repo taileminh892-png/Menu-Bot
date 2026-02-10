@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Tool Soi Cầu Tài Xỉu</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -42,9 +40,18 @@ button{background:#22c55e;font-weight:bold}
 .tab{display:none}
 </style>
 </head>
-
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Soi TX">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <body>
-
+<script>
+if("serviceWorker" in navigator){
+ navigator.serviceWorker.register("sw.js");
+}
+</script>
 <div id="bubble">🧰</div>
 
 <div id="panel">
