@@ -1,0 +1,7 @@
+body{background:#0f172a;color:white;font-family:sans-serif}
+.box{padding:15px}
+input,button{width:100%;padding:10px;margin:6px 0;border-radius:10px;border:none}
+button{background:#22c55e;font-weight:bold}
+.streak{font-size:32px;font-weight:800;text-align:center;margin:10px 0}
+.T{color:#22c55e}
+.X{color:#ef4444}
