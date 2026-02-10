@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Soi Cầu Baccarat</title>
+<link rel="manifest" href="manifest.json">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+body{margin:0;background:#0f172a;color:white;font-family:sans-serif}
+.box{padding:15px}
+input,button{width:100%;padding:12px;margin:6px 0;border-radius:10px;border:none}
+button{background:#22c55e;color:black;font-weight:bold}
+.card{background:#020617;padding:12px;border-radius:12px;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="box">
+<h2>📲 Soi Cầu Baccarat</h2>
+<input id="cau" placeholder="Nhập: BPBTBBPTP">
+<button onclick="soi()">SOI CẦU</button>
+<div class="card" id="result"></div>
+<div class="card" id="goiy"></div>
+<canvas id="chart"></canvas>
+</div>
+
+<script src="app.js"></script>
+<script>
+if("serviceWorker" in navigator){
+ navigator.serviceWorker.register("sw.js");
+}
+</script>
+</body>
+</html>
