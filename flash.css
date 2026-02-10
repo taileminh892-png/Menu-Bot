@@ -1,0 +1,8 @@
+.flash {
+  animation: flash 0.6s infinite alternate;
+}
+
+@keyframes flash {
+  from { transform: scale(1); }
+  to   { transform: scale(1.03); }
+}
