@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tool Soi Cầu Tài Xỉu</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body{margin:0;background:#0f172a;color:white;font-family:sans-serif}
+.box{padding:15px}
+input,button{width:100%;padding:12px;margin:6px 0;border-radius:10px;border:none}
+button{background:#22c55e;font-weight:bold}
+.card{background:#020617;padding:12px;border-radius:12px;margin-top:10px}
+.streak{font-size:36px;font-weight:900;text-align:center;margin:10px 0}
+.T{color:#22c55e}
+.X{color:#ef4444}
+</style>
+</head>
+
+<body>
+<div class="box">
+
+<h2>🎲 Tool Soi Cầu Tài Xỉu</h2>
+
+<input id="cau" placeholder="Nhập: TTXTXTTXX">
+<button onclick="soi()">SOI CẦU</button>
+
+<div id="streak" class="streak">🔥 --</div>
+
+<div class="card" id="result"></div>
+<div class="card" id="goiy"></div>
+
+<hr>
+
+<h3>💰 Quản Lý Vốn</h3>
+<input id="bankInput" type="number" placeholder="Vốn ban đầu (vd: 10000000)">
+<input id="betInput" type="number" placeholder="% cược mỗi tay (vd: 2)">
+<button onclick="initBank()">Khởi tạo</button>
+
+<div class="card" id="bankBox">Vốn: --</div>
+<button onclick="win()">✅ Thắng</button>
+<button onclick="lose()">❌ Thua</button>
+
+<canvas id="chart"></canvas>
+
+</div>
+
+<script>
+let chart;
+let startBank=0;
+let bank=0;
+let betPercent=2;
+
+function soi(){
+ let d=cau.value.toUpperCase().replace(/\s/g,'');
+ if(!d) return alert("Nhập T hoặc X");
+
+ for(let c of d){
+  if(c!="T"&&c!="X") return alert("Chỉ nhập T hoặc X");
+ }
+
+ let t=(d.match(/T/g)||[]).length;
+ let x=(d.match(/X/g)||[]).length;
+
+ let tRate=(t/d.length*100).toFixed(1);
+ let xRate=(x/d.length*100).toFixed(1);
+
+ result.innerText=`TÀI: ${tRate}% | XỈU: ${xRate}%`;
+ goiy.innerText=t>x?"👉 Nghiêng TÀI":x>t?"👉 Nghiêng XỈU":"👉 Cân bằng";
+
+ let s=1;
+ for(let i=d.length-1;i>0;i--){
+  if(d[i]==d[i-1]) s++;
+  else break;
+ }
+
+ let last=d[d.length-1];
+ streak.className="streak "+last;
+ streak.innerText=`🔥 ${last} x ${s}`;
+
+ drawChart(d);
+}
+
+function drawChart(d){
+ let y=[],labels=[],colors=[];
+ for(let i=0;i<d.length;i++){
+  labels.push(i+1);
+  if(d[i]=="T"){y.push(1);colors.push("#22c55e")}
+  else{y.push(0);colors.push("#ef4444")}
+ }
+
+ if(chart) chart.destroy();
+ chart=new Chart(document.getElementById("chart"),{
+  type:"line",
+  data:{labels,datasets:[{data:y,pointBackgroundColor:colors,pointRadius:5,borderColor:"#94a3b8"}]},
+  options:{
+   plugins:{legend:{display:false}},
+   scales:{y:{min:-.2,max:1.2,ticks:{callback:v=>v==1?"T":"X"}}}
+  }
+ });
+}
+
+function initBank(){
+ startBank=Number(bankInput.value);
+ betPercent=Number(betInput.value);
+ if(!startBank||!betPercent) return alert("Nhập đủ vốn và %");
+ bank=startBank;
+ updateBank();
+}
+
+function bet(){
+ return Math.floor(bank*betPercent/100);
+}
+
+function win(){
+ let b=bet();
+ bank+=b;
+ updateBank();
+}
+
+function lose(){
+ let b=bet();
+ bank-=b;
+ updateBank();
+}
+
+function updateBank(){
+ bankBox.innerText="Vốn: "+bank.toLocaleString()+" | Cược: "+bet().toLocaleString();
+}
+</script>
+
+</body>
+</html>
