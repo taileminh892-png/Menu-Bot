@@ -1,7 +1,26 @@
-<div id="bubble">🧰</div>
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tool Tài Xỉu</title>
+</head>
+<body>
+<h2>🎲 Tool Tài Xỉu</h2>
+<div id="info">Tài: 0% | Xỉu: 0%</div>
+<button onclick="add('T')">TÀI</button>
+<button onclick="add('X')">XỈU</button>
 
-<div id="panel">
- <button onclick="alert('Soi cầu')">🎲 Soi cầu</button>
- <button onclick="alert('Vốn')">💰 Quản lý vốn</button>
- <button onclick="toggle()">❌ Đóng</button>
-</div>
+<script>
+let history=[];
+
+function add(v){
+  history.push(v);
+  let t=history.filter(x=>x=='T').length;
+  let x=history.filter(x=>x=='X').length;
+  let pt=(t/history.length*100).toFixed(1);
+  let px=(x/history.length*100).toFixed(1);
+  info.innerText=`Tài: ${pt}% | Xỉu: ${px}%`;
+}
+</script>
+</body>
+</html>
