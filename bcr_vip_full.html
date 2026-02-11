@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BCR VIP</title>
+
+<style>
+body{
+  margin:0;
+  background:#050510;
+  font-family:Arial, sans-serif;
+}
+
+/* ===== MENU ===== */
+#menu{
+  position:fixed;
+  top:120px;
+  left:120px;
+  width:260px;
+  background:rgba(20,20,30,0.85);
+  backdrop-filter: blur(10px);
+  border-radius:16px;
+  padding:12px;
+  box-shadow:0 0 20px #00ffff;
+  border:1px solid rgba(0,255,255,.4);
+  z-index:9999;
+}
+
+/* ===== TITLE ===== */
+h3{
+  margin:4px 0 8px;
+  text-align:center;
+  color:#00ffff;
+  text-shadow:0 0 8px #00ffff;
+  letter-spacing:1px;
+}
+
+/* ===== BUTTON ===== */
+button{
+  width:100%;
+  padding:14px;
+  margin:6px 0;
+  border:none;
+  border-radius:10px;
+  font-size:16px;
+  font-weight:bold;
+  color:white;
+  cursor:pointer;
+}
+
+/* BANKER */
+#b{
+  background:#00c853;
+  box-shadow:0 0 10px #00ff88, inset 0 0 6px #00ff88;
+}
+
+/* PLAYER */
+#p{
+  background:#2979ff;
+  box-shadow:0 0 10px #4da3ff, inset 0 0 6px #4da3ff;
+}
+
+/* RESET */
+#r{
+  background:#444;
+  box-shadow:0 0 6px #999;
+}
+
+/* ===== INFO ===== */
+#info{
+  margin-top:8px;
+  font-size:14px;
+  line-height:1.4;
+}
+
+/* ===== ALERT ===== */
+#alertBox{
+  margin-top:8px;
+  padding:6px;
+  border-radius:8px;
+  text-align:center;
+  font-weight:bold;
+  text-shadow:0 0 6px currentColor;
+}
+</style>
+</head>
+
+<body>
+
+<div id="menu">
+  <h3>BCR VIP</h3>
+
+  <button id="b" onclick="add('B')">BANKER</button>
+  <button id="p" onclick="add('P')">PLAYER</button>
+  <button id="r" onclick="reset()">RESET</button>
+
+  <div id="info">Chưa có dữ liệu</div>
+  <div id="alertBox"></div>
+</div>
+
+<script>
+let history = [];
+let menu = document.getElementById("menu");
+let info = document.getElementById("info");
+let alertBox = document.getElementById("alertBox");
+
+function add(v){
+  history.push(v);
+  update();
+}
+
+function reset(){
+  history=[];
+  update();
+}
+
+function calcStreak(){
+  if(history.length==0) return ["",0];
+  let last = history[history.length-1];
+  let s = 1;
+  for(let i=history.length-2;i>=0;i--){
+    if(history[i]==last) s++;
+    else break;
+  }
+  return [last,s];
+}
+
+function update(){
+  if(history.length==0){
+    info.innerHTML="Chưa có dữ liệu";
+    alertBox.innerHTML="";
+    return;
+  }
+
+  let b = history.filter(x=>x=="B").length;
+  let p = history.filter(x=>x=="P").length;
+  let n = history.length;
+
+  let pb = (b/n*100).toFixed(1);
+  let pp = (p/n*100).toFixed(1);
+
+  let [last,streak] = calcStreak();
+
+  info.innerHTML = `
+Tay: ${n}<br>
+Banker: ${pb}%<br>
+Player: ${pp}%<br>
+Streak: ${last} x${streak}
+`;
+
+  if(pb>=60 && last=="B" && streak>=3){
+    alertBox.style.color="lime";
+    alertBox.innerText="🟢 CẦU MẠNH BANKER";
+  }
+  else if(pp>=60 && last=="P" && streak>=3){
+    alertBox.style.color="lime";
+    alertBox.innerText="🟢 CẦU MẠNH PLAYER";
+  }
+  else if(pb>=55){
+    alertBox.style.color="yellow";
+    alertBox.innerText="🟡 NGHIÊNG BANKER";
+  }
+  else if(pp>=55){
+    alertBox.style.color="yellow";
+    alertBox.innerText="🟡 NGHIÊNG PLAYER";
+  }
+  else{
+    alertBox.style.color="red";
+    alertBox.innerText="🔴 CẦU NHIỄU – NÊN NGHỈ";
+  }
+}
+
+/* ===== DRAG PC ===== */
+let down=false,ox,oy;
+menu.addEventListener("mousedown",e=>{
+  down=true;
+  ox=e.clientX-menu.offsetLeft;
+  oy=e.clientY-menu.offsetTop;
+});
+document.addEventListener("mouseup",()=>down=false);
+document.addEventListener("mousemove",e=>{
+  if(!down) return;
+  menu.style.left=(e.clientX-ox)+"px";
+  menu.style.top=(e.clientY-oy)+"px";
+});
+
+/* ===== DRAG MOBILE ===== */
+menu.addEventListener("touchstart",e=>{
+  let t=e.touches[0];
+  down=true;
+  ox=t.clientX-menu.offsetLeft;
+  oy=t.clientY-menu.offsetTop;
+});
+document.addEventListener("touchend",()=>down=false);
+document.addEventListener("touchmove",e=>{
+  if(!down) return;
+  let t=e.touches[0];
+  menu.style.left=(t.clientX-ox)+"px";
+  menu.style.top=(t.clientY-oy)+"px";
+});
+</script>
+
+</body>
+</html>
