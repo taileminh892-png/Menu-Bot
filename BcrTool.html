@@ -1,0 +1,73 @@
+<script>
+let history = [];
+
+function add(v){
+  history.push(v);
+  update();
+}
+
+function reset(){
+  history = [];
+  update();
+}
+
+function calcStreak(){
+  if(history.length==0) return ["",0];
+  let last = history[history.length-1];
+  let s = 1;
+  for(let i=history.length-2;i>=0;i--){
+    if(history[i]==last) s++;
+    else break;
+  }
+  return [last,s];
+}
+
+function update(){
+  if(history.length==0){
+    info.innerHTML = "Chưa có dữ liệu";
+    alertBox.innerHTML = "";
+    return;
+  }
+
+  let b = history.filter(x=>x=="B").length;
+  let p = history.filter(x=>x=="P").length;
+  let n = history.length;
+
+  let pb = (b/n*100).toFixed(1);
+  let pp = (p/n*100).toFixed(1);
+
+  let [last,streak] = calcStreak();
+
+  // ----- bcr vip percent -----
+  info.innerHTML = `
+    Hands: ${n}<br>
+    Banker: ${pb}%<br>
+    Player: ${pp}%<br>
+    Streak: ${last} x${streak}
+  `;
+
+  // ----- bcr vip color + alert -----
+  if(pb>=60 && last=="B" && streak>=3){
+    alertBox.style.color = "lime";
+    alertBox.innerText = "CẦU MẠNH BANKER";
+  }
+  else if(pp>=60 && last=="P" && streak>=3){
+    alertBox.style.color = "lime";
+    alertBox.innerText = "CẦU MẠNH PLAYER";
+  }
+  else if(pb>=55 || pp>=55){
+    alertBox.style.color = "yellow";
+    alertBox.innerText = "CẦU NGHIÊNG";
+  }
+  else{
+    alertBox.style.color = "red";
+    alertBox.innerText = "CẦU NHIỄU – NÊN NGHỈ";
+  }
+}
+</script>
+<div id="info"></div>
+<div id="alertBox"></div>
+
+<button onclick="add('B')">Banker</button>
+<button onclick="add('P')">Player</button>
+<button onclick="reset()">Reset</button>
