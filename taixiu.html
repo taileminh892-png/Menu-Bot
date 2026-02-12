@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Tool Tài Xỉu</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #111;
+        color: white;
+        text-align: center;
+    }
+    h1 {
+        color: gold;
+    }
+    button {
+        padding: 10px 20px;
+        font-size: 18px;
+        margin: 5px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+    .tai { background: red; color: white; }
+    .xiu { background: blue; color: white; }
+    .reset { background: gray; color: white; }
+    .box {
+        margin-top: 20px;
+        padding: 15px;
+        background: #222;
+        border-radius: 10px;
+        display: inline-block;
+        min-width: 300px;
+    }
+</style>
+</head>
+<body>
+
+<h1>🔥 TOOL TÀI XỈU 🔥</h1>
+
+<button class="tai" onclick="addResult('T')">TÀI</button>
+<button class="xiu" onclick="addResult('X')">XỈU</button>
+<button class="reset" onclick="resetData()">RESET</button>
+
+<div class="box">
+    <p><strong>Lịch sử:</strong></p>
+    <p id="history"></p>
+
+    <p><strong>Thống kê:</strong></p>
+    <p id="stats"></p>
+
+    <p><strong>Gợi ý:</strong></p>
+    <p id="suggestion"></p>
+</div>
+
+<script>
+let history = [];
+
+function addResult(value) {
+    history.push(value);
+    updateDisplay();
+}
+
+function resetData() {
+    history = [];
+    updateDisplay();
+}
+
+function updateDisplay() {
+    document.getElementById("history").innerText = history.join(" ");
+
+    let tai = history.filter(x => x === "T").length;
+    let xiu = history.filter(x => x === "X").length;
+    let total = history.length;
+
+    if (total === 0) {
+        document.getElementById("stats").innerText = "";
+        document.getElementById("suggestion").innerText = "";
+        return;
+    }
+
+    let taiPercent = ((tai / total) * 100).toFixed(1);
+    let xiuPercent = ((xiu / total) * 100).toFixed(1);
+
+    document.getElementById("stats").innerText =
+        `Tài: ${tai} (${taiPercent}%) | Xỉu: ${xiu} (${xiuPercent}%)`;
+
+    // Gợi ý đơn giản
+    if (total >= 2) {
+        if (history[total-1] === history[total-2]) {
+            document.getElementById("suggestion").innerText =
+                `Đang bệt ${history[total-1]} → Có thể theo tiếp ${history[total-1]}`;
+        } else {
+            document.getElementById("suggestion").innerText =
+                "Đang đảo cầu → Có thể cân nhắc theo xen kẽ";
+        }
+    }
+}
+</script>
+
+</body>
+</html>
