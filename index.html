@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tool Thống Kê Demo</title>
+
+<style>
+body{
+  margin:0;
+  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  font-family:Arial;
+}
+
+/* MENU */
+#menu{
+  position:fixed;
+  top:100px;
+  left:80px;
+  width:280px;
+  padding:15px;
+  border-radius:18px;
+  backdrop-filter:blur(15px);
+  background:rgba(0,0,0,0.6);
+  color:white;
+  box-shadow:0 0 25px #00ffff;
+  z-index:9999;
+}
+
+/* TITLE */
+#menu h3{
+  text-align:center;
+  color:#00ffff;
+  text-shadow:0 0 10px #00ffff;
+}
+
+/* BUTTON */
+button{
+  width:100%;
+  padding:12px;
+  margin:6px 0;
+  border:none;
+  border-radius:12px;
+  font-weight:bold;
+  cursor:pointer;
+  font-size:16px;
+}
+
+#tai{ background:#00c853; box-shadow:0 0 15px #00ff88; }
+#xiu{ background:#2979ff; box-shadow:0 0 15px #4da3ff; }
+#reset{ background:#ff5252; box-shadow:0 0 15px red; }
+
+/* BOX */
+#stats{
+  margin-top:10px;
+  padding:10px;
+  border-radius:12px;
+  background:rgba(255,255,255,0.1);
+  font-size:14px;
+}
+</style>
+</head>
+
+<body>
+
+<div id="menu">
+  <h3>THỐNG KÊ DEMO</h3>
+
+  <button id="tai" onclick="addTai()">TÀI</button>
+  <button id="xiu" onclick="addXiu()">XỈU</button>
+  <button id="reset" onclick="resetGame()">RESET</button>
+
+  <div id="stats">
+    Tổng: 0 <br>
+    Tài: 0 <br>
+    Xỉu: 0 <br>
+    Chuỗi hiện tại: -
+  </div>
+</div>
+
+<audio id="sound" src="https://www.myinstants.com/media/sounds/beep.mp3"></audio>
+
+<script>
+let tai=0, xiu=0, total=0;
+let last="", streak=0;
+
+let stats=document.getElementById("stats");
+let sound=document.getElementById("sound");
+
+function playSound(){
+  sound.currentTime=0;
+  sound.play();
+}
+
+function update(){
+  let percentTai = total ? ((tai/total)*100).toFixed(1) : 0;
+  let percentXiu = total ? ((xiu/total)*100).toFixed(1) : 0;
+
+  stats.innerHTML = `
+  Tổng: ${total} <br>
+  Tài: ${tai} (${percentTai}%) <br>
+  Xỉu: ${xiu} (${percentXiu}%) <br>
+  Chuỗi hiện tại: ${last ? last+" x"+streak : "-"}
+  `;
+}
+
+function addTai(){
+  tai++; total++;
+  if(last==="Tài"){ streak++; }
+  else{ last="Tài"; streak=1; }
+  playSound();
+  update();
+}
+
+function addXiu(){
+  xiu++; total++;
+  if(last==="Xỉu"){ streak++; }
+  else{ last="Xỉu"; streak=1; }
+  playSound();
+  update();
+}
+
+function resetGame(){
+  tai=0; xiu=0; total=0;
+  last=""; streak=0;
+  update();
+}
+
+/* DRAG MENU */
+let menu=document.getElementById("menu");
+let down=false,ox,oy;
+
+menu.addEventListener("mousedown",e=>{
+  down=true;
+  ox=e.clientX-menu.offsetLeft;
+  oy=e.clientY-menu.offsetTop;
+});
+document.addEventListener("mouseup",()=>down=false);
+document.addEventListener("mousemove",e=>{
+  if(!down) return;
+  menu.style.left=(e.clientX-ox)+"px";
+  menu.style.top=(e.clientY-oy)+"px";
+});
+</script>
+
+</body>
+</html>
